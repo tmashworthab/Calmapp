@@ -11,7 +11,7 @@ import {
   setSettings,
 } from "../../lib/actions";
 import { clearAll, exportJson } from "../../lib/store";
-import { Button, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Screen, Stack, Title } from "../ui";
 
 const PAUSE_CHOICES = [10, 15, 20];
 const LOCK_CHOICES = [30, 60, 120];
@@ -148,8 +148,7 @@ export function Settings() {
   };
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Settings</Title>
 
       <section className="space-y-3 rounded-xl border border-line bg-surface p-5">

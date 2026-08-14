@@ -13,7 +13,7 @@ import {
   updateDraftText,
 } from "../../lib/actions";
 import { REVIEW_CHECKLIST } from "../../lib/content";
-import { Button, Card, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Card, Screen, Stack, Title } from "../ui";
 
 /**
  * The message you were about to send.
@@ -29,8 +29,7 @@ export function Compose() {
 
   if (step === "saved") {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">This message is paused.</Title>
         <p className="text-xl leading-snug text-muted">You can review it later.</p>
@@ -50,8 +49,7 @@ export function Compose() {
 
   if (step === "deleted") {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">Gone.</Title>
         <p className="text-xl leading-snug text-muted">Nothing was sent.</p>
@@ -67,8 +65,7 @@ export function Compose() {
 
   if (step === "decide") {
     return (
-      <Screen>
-        <TopBar onBack={() => setStep("write")} onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={() => setStep("write")} onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
 
         <Title size="lg">Do not send this yet.</Title>
@@ -104,9 +101,7 @@ export function Compose() {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Put it here first.</Title>
       <p className="text-lg text-muted">
         Paste or type the message you&rsquo;re tempted to send.
@@ -140,8 +135,7 @@ export function Vault() {
   const now = useNow(1000);
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Paused messages</Title>
 
       {drafts.length === 0 ? (
@@ -188,8 +182,7 @@ export function Message({ id }: { id: string }) {
 
   if (!draft) {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" />
+      <Screen onBack={nav.home} backLabel="Home">
         <div className="flex-1" />
         <Title size="lg">Gone.</Title>
         <p className="text-xl text-muted">Nothing was sent.</p>
@@ -207,8 +200,7 @@ export function Message({ id }: { id: string }) {
 
   if (locked) {
     return (
-      <Screen>
-        <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">This message is paused.</Title>
         <p className="text-xl leading-snug text-muted">You can review it later.</p>
@@ -234,9 +226,7 @@ export function Message({ id }: { id: string }) {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">You&rsquo;re calmer now.</Title>
       <p className="text-xl leading-snug text-muted">
         Read it once. You still don&rsquo;t have to send it.
@@ -284,8 +274,7 @@ export function Review({ id }: { id: string }) {
 
   if (!draft) {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" />
+      <Screen onBack={nav.home} backLabel="Home">
         <div className="flex-1" />
         <Title size="lg">Gone.</Title>
         <div className="flex-1" />
@@ -299,8 +288,7 @@ export function Review({ id }: { id: string }) {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Review</Title>
 
       {editing ? (

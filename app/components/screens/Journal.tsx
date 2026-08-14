@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useNav } from "../../lib/nav";
 import { saveJournal } from "../../lib/actions";
-import { Button, Field, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Field, Screen, Stack, Title } from "../ui";
 
 /**
  * Deliberately not a chatbot. Nothing here is analysed, scored, or answered.
@@ -21,8 +21,7 @@ export function Journal() {
 
   if (saved) {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">Written down.</Title>
         <p className="text-xl leading-snug text-muted">
@@ -40,9 +39,7 @@ export function Journal() {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <div>
         <Title size="lg">Write it here instead of sending it.</Title>
       </div>

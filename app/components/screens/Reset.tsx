@@ -5,7 +5,7 @@ import { useNav } from "../../lib/nav";
 import { useStore } from "../../lib/hooks";
 import { startPause } from "../../lib/actions";
 import { RESET_CLOSING, RESET_STEPS } from "../../lib/content";
-import { Button, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Screen, Stack, Title } from "../ui";
 
 /** Self-paced: one instruction per screen, no timer, no pressure. */
 export function Reset() {
@@ -16,8 +16,7 @@ export function Reset() {
 
   if (finished) {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">{RESET_CLOSING}</Title>
         <div className="flex-1" />
@@ -39,9 +38,7 @@ export function Reset() {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <div className="flex flex-1 flex-col justify-center" aria-live="polite">
         <p className="text-6xl leading-none font-black tracking-tight">
           {RESET_STEPS[step]}

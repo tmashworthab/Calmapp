@@ -11,7 +11,7 @@ import {
   startPause,
 } from "../../lib/actions";
 import { PAUSE_STATEMENTS } from "../../lib/content";
-import { Button, Lines, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Lines, Screen, Stack, Title } from "../ui";
 
 /** Emergency mode, screen one. No questions, no inputs, one way forward. */
 export function Stop() {
@@ -19,9 +19,7 @@ export function Stop() {
   const { settings } = useStore();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title>STOP.</Title>
 
       <Lines
@@ -63,9 +61,7 @@ export function Reassurance() {
   const { settings } = useStore();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title>NOT NOW.</Title>
 
       <Lines
@@ -135,9 +131,7 @@ export function Countdown() {
   const progress = Math.min(1, Math.max(0, elapsed / timer.durationMs));
 
   return (
-    <Screen>
-      <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
       <div className="flex flex-col items-center gap-4 pt-2">
         <p className="text-sm font-bold tracking-[0.22em] text-faint">
           {timer.running ? "PAUSING" : "HELD"}

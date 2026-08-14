@@ -3,7 +3,7 @@
 import { useNav } from "../../lib/nav";
 import { useStore } from "../../lib/hooks";
 import { deleteJournal, deleteReframe } from "../../lib/actions";
-import { Button, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Screen, Stack, Title } from "../ui";
 
 /** Read-back for the journal. Still no analysis — it just shows what you wrote. */
 export function Notes() {
@@ -11,8 +11,7 @@ export function Notes() {
   const { journal, reframes } = useStore();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Things you wrote down</Title>
 
       {reframes.length > 0 && (

@@ -2,7 +2,7 @@
 
 import { useNav } from "../../lib/nav";
 import { EMERGENCY_RULES } from "../../lib/content";
-import { Button, Screen, Stack, Title, TopBar } from "../ui";
+import { Screen, Title } from "../ui";
 
 /**
  * Reachable from every screen in the app. The visa/immigration line sits with
@@ -12,9 +12,7 @@ export function Rules() {
   const nav = useNav();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} />
-
+    <Screen onBack={nav.back}>
       <div>
         <p className="text-sm font-bold tracking-[0.22em] text-faint">
           WHEN ACTIVATED
@@ -35,12 +33,6 @@ export function Rules() {
           </li>
         ))}
       </ol>
-
-      <Stack>
-        <Button variant="primary" onClick={nav.back}>
-          BACK
-        </Button>
-      </Stack>
     </Screen>
   );
 }

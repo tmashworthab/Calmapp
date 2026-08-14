@@ -5,7 +5,7 @@ import { useNav } from "../../lib/nav";
 import { useStore } from "../../lib/hooks";
 import { letterText, saveReframe } from "../../lib/actions";
 import type { ReframeItem } from "../../lib/types";
-import { Button, Field, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Field, Screen, Stack, Title } from "../ui";
 
 /**
  * The letter, in your own handwriting so to speak. Set at a calm reading size
@@ -18,9 +18,7 @@ export function Letter() {
   const paragraphs = letterText(state).split("\n\n").filter(Boolean);
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <p className="text-sm font-bold tracking-[0.22em] text-faint">
         FROM YOU, WHEN YOU WERE CALM
       </p>
@@ -41,7 +39,6 @@ export function Letter() {
         <Button variant="primary" onClick={() => nav.go({ name: "reframe" })}>
           DO WHAT THE LETTER SAYS
         </Button>
-        <Button onClick={nav.back}>BACK</Button>
       </Stack>
     </Screen>
   );
@@ -73,8 +70,7 @@ export function Reframe() {
 
   if (saved) {
     return (
-      <Screen>
-        <TopBar onBack={nav.home} label="Home" onRules={() => nav.go({ name: "rules" })} />
+      <Screen onBack={nav.home} backLabel="Home" onRules={() => nav.go({ name: "rules" })}>
         <div className="flex-1" />
         <Title size="lg">Written down.</Title>
         <p className="text-xl leading-snug text-muted">
@@ -91,9 +87,7 @@ export function Reframe() {
   }
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">One at a time.</Title>
       <p className="text-lg text-muted">
         What hurt, how you&rsquo;re reading it, and at least one other way it

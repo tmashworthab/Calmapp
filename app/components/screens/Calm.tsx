@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useNav } from "../../lib/nav";
 import { savePattern } from "../../lib/actions";
-import { Button, Field, Intensity, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Field, Intensity, Screen, Stack, Title } from "../ui";
 
 /** Shown when the countdown reaches zero. Three options, no recommendation. */
 export function Calm() {
   const nav = useNav();
 
   return (
-    <Screen>
-      <TopBar onRules={() => nav.go({ name: "rules" })} />
+    <Screen onRules={() => nav.go({ name: "rules" })}>
       <div className="flex-1" />
 
       <Title size="lg">You&rsquo;re calmer. Now choose.</Title>
@@ -36,8 +35,7 @@ export function TalkLater() {
   const nav = useNav();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <div className="flex-1" />
 
       <Title size="lg">Later.</Title>
@@ -67,8 +65,7 @@ export function DoNothing() {
   const nav = useNav();
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <div className="flex-1" />
 
       <Title size="lg">Doing nothing right now is a valid choice.</Title>
@@ -102,9 +99,7 @@ export function LogPattern() {
   const [whatHelped, setWhatHelped] = useState("");
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Record it</Title>
       <p className="text-lg text-muted">Optional. Skip anything you don&rsquo;t want.</p>
 

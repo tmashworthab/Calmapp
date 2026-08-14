@@ -3,7 +3,7 @@
 import { useNav } from "../../lib/nav";
 import { useStore } from "../../lib/hooks";
 import { deletePattern } from "../../lib/actions";
-import { Button, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Screen, Stack, Title } from "../ui";
 
 function average(values: number[]): string | null {
   if (values.length === 0) return null;
@@ -38,8 +38,7 @@ export function Patterns() {
   if (after) stats.push(["Average intensity after the pause", after]);
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Patterns</Title>
 
       <dl className="space-y-3">

@@ -6,21 +6,71 @@ import { useEffect, useRef, type ReactNode } from "react";
    someone whose hands are not steady: nothing interactive is under 60px tall,
    and nothing important is smaller than 18px. */
 
+/**
+ * Back and Rules live at the bottom of every screen, not in the top corners.
+ * The top corners of a phone are the hardest place to reach one-handed, and
+ * this app is used one-handed by definition.
+ */
 export function Screen({
   children,
-  center = false,
+  onBack,
+  onRules,
+  backLabel = "Back",
 }: {
   children: ReactNode;
-  center?: boolean;
+  onBack?: () => void;
+  onRules?: () => void;
+  backLabel?: string;
 }) {
+  const hasNav = Boolean(onBack || onRules);
   return (
-    <main
-      className={`mx-auto flex min-h-[100svh] w-full max-w-md flex-col gap-6 px-5 pt-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] ${
-        center ? "justify-center" : ""
-      }`}
-    >
+    <main className="mx-auto flex min-h-[100svh] w-full max-w-md flex-col gap-6 px-5 pt-5">
       {children}
+      {hasNav ? (
+        <BottomBar onBack={onBack} onRules={onRules} backLabel={backLabel} />
+      ) : (
+        <div className="pb-[max(1.5rem,env(safe-area-inset-bottom))]" />
+      )}
     </main>
+  );
+}
+
+/**
+ * Sticky, so it stays reachable on the screens long enough to scroll — the
+ * rules card and the review checklist especially. Each half keeps its side even
+ * when the other is empty, so the same tap always does the same thing.
+ */
+function BottomBar({
+  onBack,
+  onRules,
+  backLabel,
+}: {
+  onBack?: () => void;
+  onRules?: () => void;
+  backLabel: string;
+}) {
+  const style =
+    "flex min-h-[60px] w-full items-center justify-center rounded-xl border border-line bg-surface px-3 text-lg font-semibold text-muted transition-colors hover:border-line-strong hover:text-text active:translate-y-px";
+
+  return (
+    <nav className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-bg px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+      <div className="mx-auto flex w-full max-w-md gap-2">
+        <div className="flex-1">
+          {onBack && (
+            <button type="button" onClick={onBack} className={style}>
+              ← {backLabel}
+            </button>
+          )}
+        </div>
+        <div className="flex-1">
+          {onRules && (
+            <button type="button" onClick={onRules} className={style}>
+              Rules
+            </button>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -99,8 +149,10 @@ export function Button({
   ariaLabel,
 }: ButtonProps) {
   const base =
+    // Even the quiet links get a full-width, 52px target. They were previously
+    // only as wide as their own text, which made them fiddly to hit.
     variant === "quiet"
-      ? "min-h-[44px] px-1 text-base font-medium"
+      ? "flex min-h-[52px] w-full items-center justify-center px-2 text-base font-medium"
       : "flex min-h-[64px] w-full items-center justify-center rounded-xl px-5 text-center text-lg leading-tight font-bold tracking-wide transition-colors";
 
   return (
@@ -118,44 +170,6 @@ export function Button({
 
 export function Stack({ children }: { children: ReactNode }) {
   return <div className="flex flex-col gap-2.5">{children}</div>;
-}
-
-/** Top bar: back on the left, the rules always one tap away on the right. */
-export function TopBar({
-  onBack,
-  onRules,
-  label = "Back",
-}: {
-  onBack?: () => void;
-  onRules?: () => void;
-  label?: string;
-}) {
-  return (
-    <div className="flex min-h-[44px] items-center justify-between">
-      {onBack ? (
-        <button
-          type="button"
-          onClick={onBack}
-          className="-ml-2 min-h-[44px] px-2 text-base font-semibold text-muted hover:text-text"
-        >
-          ← {label}
-        </button>
-      ) : (
-        <span />
-      )}
-      {onRules ? (
-        <button
-          type="button"
-          onClick={onRules}
-          className="-mr-2 min-h-[44px] px-2 text-base font-semibold text-muted hover:text-text"
-        >
-          Rules
-        </button>
-      ) : (
-        <span />
-      )}
-    </div>
-  );
 }
 
 export function Card({ children }: { children: ReactNode }) {

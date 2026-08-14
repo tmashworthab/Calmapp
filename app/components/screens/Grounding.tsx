@@ -4,13 +4,12 @@ import { useState } from "react";
 import { useNav } from "../../lib/nav";
 import { useNow, usePrefersReducedMotion } from "../../lib/hooks";
 import { BODY_STEPS, SENSES_STEPS } from "../../lib/content";
-import { Button, Lead, Screen, Stack, Title, TopBar } from "../ui";
+import { Button, Lead, Screen, Stack, Title } from "../ui";
 
 export function Ground() {
   const nav = useNav();
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <Title size="lg">Bring it down.</Title>
       <Lead>Pick one. Any one.</Lead>
 
@@ -52,9 +51,7 @@ export function Breathe() {
   const cycle = Math.min(CYCLES, Math.floor(elapsed / CYCLE_MS) + 1);
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <p className="text-2xl leading-snug font-bold">Put both feet on the floor.</p>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-10">
@@ -120,9 +117,7 @@ export function Senses() {
   const last = step === SENSES_STEPS.length - 1;
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <p className="text-2xl leading-snug font-bold">Look around you.</p>
 
       <div className="flex flex-1 flex-col justify-center" aria-live="polite">
@@ -155,9 +150,7 @@ export function Body() {
   const last = step === BODY_STEPS.length - 1;
 
   return (
-    <Screen>
-      <TopBar onBack={nav.back} onRules={() => nav.go({ name: "rules" })} />
-
+    <Screen onBack={nav.back} onRules={() => nav.go({ name: "rules" })}>
       <div className="flex flex-1 flex-col justify-center" aria-live="polite">
         <p className="text-5xl leading-tight font-black tracking-tight">
           {BODY_STEPS[step]}
