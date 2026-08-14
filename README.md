@@ -30,6 +30,21 @@ home screen from the browser's share menu — it installs as a standalone app.
 After the first load it works with no connection at all; a service worker caches
 the shell, and there is nothing else to fetch.
 
+## Deploy
+
+`railway.json` and `nixpacks.toml` build the static export and serve it with
+`scripts/serve.mjs`, which honours Railway's injected `PORT` and binds
+`0.0.0.0`. Point a Railway project at this repo and the branch; there is nothing
+to configure and no environment variables to set — the app has no secrets and
+makes no external calls.
+
+Once it is on an HTTPS URL, open it on the phone and use **Add to Home Screen**
+(Safari) or **Install app** (Chrome). It then launches full-screen and works
+with no connection.
+
+> On iOS, a home-screen app has its own storage, separate from Safari's. Install
+> it before you start writing anything down, or those entries won't follow it.
+
 ## Privacy
 
 - Everything is stored in `localStorage` on the device.

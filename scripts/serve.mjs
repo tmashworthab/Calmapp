@@ -7,8 +7,21 @@ import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize, resolve } from "node:path";
 
 const root = resolve(process.cwd(), "out");
+// Railway supplies PORT; binding 0.0.0.0 is what makes the app reachable both
+// from the platform's proxy and from another device on a local network.
 const port = Number(process.env.PORT ?? 3000);
 const host = process.env.HOST ?? "0.0.0.0";
+
+// Without this, a build that failed earlier in the pipeline would still start a
+// server and answer every request with a 404, which looks like a routing bug
+// rather than a missing build.
+try {
+  const info = await stat(root);
+  if (!info.isDirectory()) throw new Error("not a directory");
+} catch {
+  console.error(`No build found at ${root}. Run \`npm run build\` first.`);
+  process.exit(1);
+}
 
 const TYPES = {
   ".html": "text/html; charset=utf-8",
