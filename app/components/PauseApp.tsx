@@ -10,6 +10,7 @@ import { Journal } from "./screens/Journal";
 import { Compose, Vault, Message, Review } from "./screens/Message";
 import { Reset } from "./screens/Reset";
 import { Calm, TalkLater, DoNothing, LogPattern } from "./screens/Calm";
+import { Letter, Reframe } from "./screens/Letter";
 import { Notes } from "./screens/Notes";
 import { Rules } from "./screens/Rules";
 import { Patterns } from "./screens/Patterns";
@@ -100,6 +101,10 @@ export function PauseApp() {
         return <DoNothing />;
       case "log":
         return <LogPattern />;
+      case "letter":
+        return <Letter />;
+      case "reframe":
+        return <Reframe />;
       case "notes":
         return <Notes />;
       case "rules":

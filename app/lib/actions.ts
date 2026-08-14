@@ -1,5 +1,6 @@
+import { DEFAULT_LETTER } from "./letter";
 import { newId, update } from "./store";
-import type { Draft, PatternEntry, State } from "./types";
+import type { Draft, PatternEntry, ReframeItem, State } from "./types";
 
 /* Every mutation the app can make. Nothing here touches the network. */
 
@@ -174,6 +175,39 @@ export function deleteJournal(id: string) {
   update((state) => ({
     ...state,
     journal: state.journal.filter((entry) => entry.id !== id),
+  }));
+}
+
+/* ---------- the letter, and the exercise it asks for ---------- */
+
+export function letterText(state: State): string {
+  return state.letter ?? DEFAULT_LETTER;
+}
+
+export function isLetterEdited(state: State): boolean {
+  return state.letter !== null && state.letter !== DEFAULT_LETTER;
+}
+
+export function setLetter(text: string) {
+  update((state) => ({ ...state, letter: text }));
+}
+
+/** Puts the original back. The shipped copy is never overwritten. */
+export function restoreLetter() {
+  update((state) => ({ ...state, letter: null }));
+}
+
+export function saveReframe(items: ReframeItem[]) {
+  update((state) => ({
+    ...state,
+    reframes: [{ id: newId(), createdAt: Date.now(), items }, ...state.reframes],
+  }));
+}
+
+export function deleteReframe(id: string) {
+  update((state) => ({
+    ...state,
+    reframes: state.reframes.filter((entry) => entry.id !== id),
   }));
 }
 

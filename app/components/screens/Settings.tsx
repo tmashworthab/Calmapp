@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useNav } from "../../lib/nav";
 import { useStore } from "../../lib/hooks";
-import { setSettings } from "../../lib/actions";
+import {
+  isLetterEdited,
+  letterText,
+  restoreLetter,
+  setLetter,
+  setSettings,
+} from "../../lib/actions";
 import { clearAll, exportJson } from "../../lib/store";
 import { Button, Screen, Stack, Title, TopBar } from "../ui";
 
@@ -50,6 +56,78 @@ function Choice({
   );
 }
 
+/**
+ * Editing the letter lives here rather than on the letter screen itself — it is
+ * a thing to do while calm, and putting a text box in front of activated-you is
+ * how a letter gets rewritten into something bitter.
+ */
+function LetterSection() {
+  const state = useStore();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(() => letterText(state));
+
+  if (!editing) {
+    return (
+      <section className="space-y-3">
+        <h2 className="text-lg font-bold">The letter</h2>
+        <p className="text-base text-muted">
+          Shown during a pause. It ships with the app, so it survives a new
+          device and Delete all data.
+        </p>
+        <Stack>
+          <Button
+            onClick={() => {
+              setDraft(letterText(state));
+              setEditing(true);
+            }}
+          >
+            EDIT THE LETTER
+          </Button>
+          {isLetterEdited(state) && (
+            <Button variant="quiet" onClick={restoreLetter}>
+              Restore the original
+            </Button>
+          )}
+        </Stack>
+      </section>
+    );
+  }
+
+  return (
+    <section className="space-y-3">
+      <h2 className="text-lg font-bold">The letter</h2>
+      <label htmlFor="letter" className="sr-only">
+        The letter from calm you
+      </label>
+      <textarea
+        id="letter"
+        rows={14}
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        className="w-full resize-y rounded-xl border border-line bg-surface p-4 text-lg leading-relaxed text-text focus:border-line-strong"
+      />
+      <p className="text-base text-muted">
+        Blank lines separate paragraphs.
+      </p>
+      <Stack>
+        <Button
+          variant="primary"
+          disabled={!draft.trim()}
+          onClick={() => {
+            setLetter(draft);
+            setEditing(false);
+          }}
+        >
+          SAVE
+        </Button>
+        <Button variant="quiet" onClick={() => setEditing(false)}>
+          Cancel
+        </Button>
+      </Stack>
+    </section>
+  );
+}
+
 export function Settings() {
   const nav = useNav();
   const state = useStore();
@@ -83,6 +161,8 @@ export function Settings() {
         </p>
       </section>
 
+      <LetterSection />
+
       <Choice
         label="Pause length"
         note="Can be made longer, never shorter than 10 minutes."
@@ -102,9 +182,9 @@ export function Settings() {
       <div className="flex-1" />
 
       <Stack>
-        {state.journal.length > 0 && (
+        {state.journal.length + state.reframes.length > 0 && (
           <Button onClick={() => nav.go({ name: "notes" })}>
-            THINGS YOU WROTE DOWN ({state.journal.length})
+            THINGS YOU WROTE DOWN ({state.journal.length + state.reframes.length})
           </Button>
         )}
         <Button onClick={onExport}>EXPORT MY DATA</Button>

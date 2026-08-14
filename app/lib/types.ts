@@ -29,6 +29,24 @@ export type PatternEntry = {
 };
 
 /**
+ * One thing that hurt, the reading of it that hurts, and at least one other
+ * reading. The counter-interpretation is always written by hand — the app never
+ * supplies one, because an app telling you your fear is wrong is the thing this
+ * whole project refuses to do.
+ */
+export type ReframeItem = {
+  hurt: string;
+  interpretation: string;
+  counter: string;
+};
+
+export type ReframeEntry = {
+  id: string;
+  createdAt: number;
+  items: ReframeItem[];
+};
+
+/**
  * The countdown survives reloads and backgrounding. While running we store the
  * wall-clock end time; while held we store what was left, so a paused timer
  * doesn't quietly drain in the background.
@@ -52,6 +70,14 @@ export type State = {
   drafts: Draft[];
   journal: JournalEntry[];
   patterns: PatternEntry[];
+  reframes: ReframeEntry[];
+  /**
+   * An edited letter, or null to use the one shipped with the app. Keeping the
+   * original in code rather than only in storage means it is still there on a
+   * new device, and still there after Delete all data — which is exactly when
+   * it is most likely to be needed.
+   */
+  letter: string | null;
   pausesCompleted: number;
   messagesNotSent: number;
   timer: Timer | null;
@@ -65,6 +91,8 @@ export const EMPTY_STATE: State = {
   drafts: [],
   journal: [],
   patterns: [],
+  reframes: [],
+  letter: null,
   pausesCompleted: 0,
   messagesNotSent: 0,
   timer: null,

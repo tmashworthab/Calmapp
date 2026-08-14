@@ -78,6 +78,9 @@ export function Home() {
       <div className="flex-1" />
 
       <nav className="grid grid-cols-2 gap-x-2 border-t border-line pt-4">
+        <Button variant="quiet" onClick={() => nav.go({ name: "letter" })}>
+          Read the letter
+        </Button>
         <Button variant="quiet" onClick={() => nav.go({ name: "rules" })}>
           Emergency rules
         </Button>

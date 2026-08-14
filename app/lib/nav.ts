@@ -21,6 +21,8 @@ export type View =
   | { name: "talk" }
   | { name: "nothing" }
   | { name: "log" }
+  | { name: "letter" }
+  | { name: "reframe" }
   | { name: "notes" }
   | { name: "rules" }
   | { name: "patterns" }

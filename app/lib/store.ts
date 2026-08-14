@@ -26,6 +26,8 @@ function coerce(raw: unknown): State {
     drafts: Array.isArray(value.drafts) ? value.drafts : [],
     journal: Array.isArray(value.journal) ? value.journal : [],
     patterns: Array.isArray(value.patterns) ? value.patterns : [],
+    reframes: Array.isArray(value.reframes) ? value.reframes : [],
+    letter: typeof value.letter === "string" ? value.letter : null,
     pausesCompleted: Number(value.pausesCompleted) || 0,
     messagesNotSent: Number(value.messagesNotSent) || 0,
     timer: value.timer ?? null,

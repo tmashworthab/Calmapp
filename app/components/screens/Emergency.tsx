@@ -50,6 +50,7 @@ export function Stop() {
         >
           START {settings.pauseMinutes}-MINUTE PAUSE
         </Button>
+        <Button onClick={() => nav.go({ name: "letter" })}>READ THE LETTER</Button>
         <Button onClick={() => nav.go({ name: "reset" })}>I NEED A RESET</Button>
       </Stack>
     </Screen>
@@ -183,9 +184,12 @@ export function Countdown() {
       <div className="flex-1" />
 
       <Stack>
-        <Button variant="primary" onClick={() => nav.go({ name: "ground" })}>
-          GROUNDING
+        {/* Above grounding deliberately: your own words outrank anything the
+            app can say to you. */}
+        <Button variant="primary" onClick={() => nav.go({ name: "letter" })}>
+          READ THE LETTER
         </Button>
+        <Button onClick={() => nav.go({ name: "ground" })}>GROUNDING</Button>
         <Button onClick={() => nav.go({ name: "journal" })}>
           I WANT TO EXPLAIN WHAT HAPPENED
         </Button>
