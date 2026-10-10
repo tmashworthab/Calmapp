@@ -12,6 +12,8 @@ let package = Package(
                 .linkedFramework("IOKit"),
                 .linkedFramework("WebKit"),
                 .linkedFramework("Security"),
+                .linkedFramework("CoreWLAN"),
+                .linkedFramework("CoreLocation"),
             ]
         )
     ]

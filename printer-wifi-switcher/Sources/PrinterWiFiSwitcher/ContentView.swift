@@ -8,6 +8,9 @@ struct ContentView: View {
     @AppStorage("printerHost") private var printerHost = ""
     @State private var selection: NetworkProfile.ID?
     @State private var editing: NetworkProfile?
+    @State private var addingNetwork = false
+    /// The profile whose printer page should open as soon as it's shown (right after adding it).
+    @State private var openPrinterPageFor: NetworkProfile.ID?
 
     var body: some View {
         NavigationSplitView {
@@ -34,9 +37,18 @@ struct ContentView: View {
                 }
             }
             .navigationSplitViewColumnWidth(min: 280, ideal: 310)
+            .safeAreaInset(edge: .bottom) {
+                Button { addingNetwork = true } label: {
+                    Label("Add Wi-Fi Network…", systemImage: "plus.circle.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .padding(12)
+            }
             .toolbar {
-                Button { editing = .blank } label: {
-                    Label("Add network", systemImage: "plus")
+                Button { addingNetwork = true } label: {
+                    Label("Add Wi-Fi Network", systemImage: "plus")
                 }
             }
         } detail: {
@@ -45,15 +57,27 @@ struct ContentView: View {
                     profile: profile,
                     host: printerHost.trimmingCharacters(in: .whitespaces),
                     usbConnected: !usb.devices.isEmpty,
+                    openPrinterPage: openPrinterPageFor == profile.id,
                     onEdit: { editing = profile }
                 )
                 .id("\(profile.id)|\(printerHost)")
+                .onAppear { openPrinterPageFor = nil }
             } else {
-                ContentUnavailableView(
-                    "Choose a saved network",
-                    systemImage: "wifi",
-                    description: Text("Pick a network on the left to switch the printer to it, or press + to add one.")
-                )
+                ContentUnavailableView {
+                    Label("Add the networks your printer should use", systemImage: "wifi")
+                } description: {
+                    Text("Pick one of the Wi-Fi networks this Mac can see. The app then opens the printer's Wi-Fi settings with the details filled in.")
+                } actions: {
+                    Button("Add Wi-Fi Network…") { addingNetwork = true }
+                        .buttonStyle(.borderedProminent)
+                }
+            }
+        }
+        .sheet(isPresented: $addingNetwork) {
+            AddNetworkSheet(existingSSIDs: Set(profiles.profiles.map(\.ssid))) { saved, password in
+                profiles.save(saved, password: password)
+                openPrinterPageFor = saved.id
+                selection = saved.id
             }
         }
         .sheet(item: $editing) { profile in
@@ -124,10 +148,19 @@ private struct SwitchView: View {
     let usbConnected: Bool
     let onEdit: () -> Void
 
-    @State private var showingPrinterPage = false
+    @State private var showingPrinterPage: Bool
     @State private var status = ""
     @State private var refillToken = 0
     @State private var copied: String?
+
+    init(profile: NetworkProfile, host: String, usbConnected: Bool,
+         openPrinterPage: Bool, onEdit: @escaping () -> Void) {
+        self.profile = profile
+        self.host = host
+        self.usbConnected = usbConnected
+        self.onEdit = onEdit
+        _showingPrinterPage = State(initialValue: openPrinterPage && !host.isEmpty)
+    }
 
     private var password: String { Keychain.password(for: profile.id) }
 
@@ -200,7 +233,9 @@ private struct SwitchView: View {
                     Text("1. Press **Open printer settings**. If asked to log in, use the printer's admin password. Many older Brother models ship with `access`.")
                     Text("2. Go to **Network › Wireless › Wireless (Personal)**. The network name and password fill in automatically.")
                     Text("3. Check the security type is **\(profile.security.rawValue)**, then press **Submit**.")
-                    Text("The printer will drop off the current network and join \(profile.ssid). If you're moving it, do this before you leave. It can only reach networks it's in range of.")
+                    Text("The printer then leaves its current network and joins \(profile.ssid). From then on, anyone on \(profile.ssid) can add it on a Mac (System Settings › Printers & Scanners › Add Printer), and iPhones and iPads can print to it with AirPrint.")
+                        .foregroundStyle(.secondary)
+                    Text("If you're moving the printer, do this before you leave. It can only join a network it's in range of.")
                         .foregroundStyle(.secondary)
                     Button("Open printer settings") {
                         status = ""
@@ -222,16 +257,40 @@ private struct SwitchView: View {
     }
 }
 
-private struct ProfileEditor: View {
+struct ProfileEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var draft: NetworkProfile
     @State private var password: String
+    @State private var lookingUpPassword = false
+    @State private var lookupMessage: String?
     let onSave: (NetworkProfile, String) -> Void
+    /// Shown as a Back button when the editor is the second step of adding a network.
+    let onBack: (() -> Void)?
 
-    init(profile: NetworkProfile, onSave: @escaping (NetworkProfile, String) -> Void) {
+    init(profile: NetworkProfile, onSave: @escaping (NetworkProfile, String) -> Void,
+         onBack: (() -> Void)? = nil) {
         _draft = State(initialValue: profile)
         _password = State(initialValue: Keychain.password(for: profile.id))
         self.onSave = onSave
+        self.onBack = onBack
+    }
+
+    private func useMacPassword() {
+        lookingUpPassword = true
+        lookupMessage = nil
+        let ssid = draft.ssid
+        DispatchQueue.global(qos: .userInitiated).async {
+            let found = WiFiScanner.passwordSavedOnMac(for: ssid)
+            DispatchQueue.main.async {
+                lookingUpPassword = false
+                if let found {
+                    password = found
+                    lookupMessage = "Filled in from this Mac's saved networks."
+                } else {
+                    lookupMessage = "This Mac has no saved password for that network, or access wasn't allowed. Type it in instead."
+                }
+            }
+        }
     }
 
     private var canSave: Bool {
@@ -248,6 +307,13 @@ private struct ProfileEditor: View {
             }
             if draft.security.needsPassword {
                 SecureField("Wi-Fi password (8+ characters)", text: $password)
+                Button(lookingUpPassword ? "Asking macOS…" : "Use the password this Mac has saved") {
+                    useMacPassword()
+                }
+                .disabled(lookingUpPassword || draft.ssid.trimmingCharacters(in: .whitespaces).isEmpty)
+                if let lookupMessage {
+                    Text(lookupMessage).font(.caption).foregroundStyle(.secondary)
+                }
             }
             Text("The HL-3140CW only joins 2.4 GHz networks and can't use WPA3-only security. A router in WPA2/WPA3 mixed mode works.")
                 .font(.caption).foregroundStyle(.secondary)
@@ -255,9 +321,15 @@ private struct ProfileEditor: View {
         .formStyle(.grouped)
         .frame(width: 440)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+            ToolbarItem(placement: .cancellationAction) {
+                if let onBack {
+                    Button("Back", action: onBack)
+                } else {
+                    Button("Cancel") { dismiss() }
+                }
+            }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button(onBack == nil ? "Save" : "Save and Open Printer Settings") {
                     onSave(draft, password)
                     dismiss()
                 }

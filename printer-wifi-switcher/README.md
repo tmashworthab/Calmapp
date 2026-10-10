@@ -47,13 +47,23 @@ app and choose **Open**.
 
 ## Use it
 
-1. Press **+** and add each Wi-Fi network you want the printer to use.
+1. Press **Add Wi-Fi Network…** at the bottom of the left column. Pick a network
+   your Mac can see (allow Location access when asked; macOS hides network names
+   without it). Type the password, or press **Use the password this Mac has saved**.
+   Then press **Save and Open Printer Settings**.
 2. With the printer on a network your Mac is also on, check it shows in the
    sidebar, or type its address.
 3. Select a saved network and press **Open printer settings**.
 4. Log in if asked. On many older Brother models the default password is `access`.
 5. Go to **Network › Wireless › Wireless (Personal)**. The name and password fill in
    and are outlined in green. Check the security type, then press **Submit**.
+
+Once it's on a network, anyone on that network can add it in System Settings ›
+Printers & Scanners, and iPhones and iPads see it through AirPrint.
+
+**Two routers?** If a second router is connected to your main one by cable, it must
+be in *access point* (bridge) mode. Otherwise it makes a separate network, and
+devices on one Wi-Fi name can't see a printer on the other.
 
 The printer restarts its Wi-Fi and joins the new network. If the fields don't fill
 (firmware pages differ), use **Copy name** and **Copy password**, then paste.

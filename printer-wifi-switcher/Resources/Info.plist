@@ -24,6 +24,10 @@
     <true/>
     <key>NSLocalNetworkUsageDescription</key>
     <string>Finds your printer on the local network and opens its settings page so it can be switched to another Wi-Fi network.</string>
+    <key>NSLocationUsageDescription</key>
+    <string>macOS only shows Wi-Fi network names to apps with Location access. This app uses it to list nearby networks and never uses your location.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>macOS only shows Wi-Fi network names to apps with Location access. This app uses it to list nearby networks and never uses your location.</string>
     <key>NSBonjourServices</key>
     <array>
         <string>_ipp._tcp</string>
